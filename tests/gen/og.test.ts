@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderOgSvg } from '../../scripts/gen-og.mts';
+import { renderOgSvg, accentHexFromTokens } from '../../scripts/gen-og.mts';
 import sharp from 'sharp';
 
 describe('gen-og', () => {
@@ -18,5 +18,22 @@ describe('gen-og', () => {
     expect(meta.format).toBe('png');
     expect(meta.width).toBe(1200);
     expect(meta.height).toBe(630);
+  });
+
+  it('extracts --color-accent (not the -hover/-subtle vars) and converts oklch to hex', () => {
+    const css = `:root {
+    --color-accent: oklch(39% 0.11 155);
+    --color-accent-hover: oklch(35% 0.12 155);
+    --color-accent-subtle: oklch(95% 0.02 155);
+  }`;
+    expect(accentHexFromTokens(css).toLowerCase()).toBe('#005529');
+  });
+
+  it('returns a bare hex accent unchanged', () => {
+    expect(accentHexFromTokens('--color-accent: #00693e;')).toBe('#00693e');
+  });
+
+  it('throws if --color-accent is absent', () => {
+    expect(() => accentHexFromTokens(':root { --color-bg: #fff; }')).toThrow();
   });
 });
