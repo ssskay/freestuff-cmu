@@ -3,74 +3,102 @@
  *
  * Everything that another school would need to change to fork this site lives
  * here: branding, the category taxonomy, eligibility options, the curated
- * homepage collections, and the scenario filters. Pages and the data layer read
- * from this module rather than hardcoding values inline.
+ * homepage collections, the scenario filters, and the map model. Pages and the
+ * data layer read from this module rather than hardcoding values inline.
  */
 
 /**
  * PACK FILES (the full per-school edit surface — see recipes/recipe-fork.md):
  *   src/content/resources.json, src/content/building-footprints.json,
  *   public/tokens.css (--color-accent), public/og.png (generated),
- *   this file (SITE + taxonomy + collections + scenarios),
- *   agents/verify.config.json, and the `GREEN` anchor constant in src/pages/map.astro.
- * Everything else is shared engine — do not edit it in a fork; send changes upstream.
+ *   this file (SITE + MAP + taxonomy + collections + scenarios),
+ *   agents/verify.config.json.
+ * The map's anchor/center/copy now live in MAP below (no longer a constant in
+ * map.astro). Everything else is shared engine — do not edit it in a fork; send
+ * changes upstream.
  */
 
 import type { Resource } from './lib/catalog';
 
 /** School / site branding. The single place a fork edits to rebrand. */
 export const SITE = {
-  school: 'Dartmouth',
-  name: 'Free Stuff @ Dartmouth',
+  school: 'Carnegie Mellon',
+  name: 'Free Stuff @ Carnegie Mellon',
   tagline: 'Your complete catalog of free perks',
-  url: 'https://freestuff-dartmouth.vercel.app',
+  url: 'https://freestuff-cmu.vercel.app',
   /** Public repo — used for the "fork this" + "report an issue" links. */
-  github: 'https://github.com/ssskay/freestuff-dartmouth-v2',
+  github: 'https://github.com/ssskay/freestuff-cmu',
   /** School email domain, used for form placeholders. Pack value: your school's domain. */
-  emailDomain: 'dartmouth.edu',
+  emailDomain: 'andrew.cmu.edu',
 } as const;
 
 /**
  * Bounding box that all geocoded resources must fall within — the catalog-data
  * test asserts every pin is inside it. Pack value: set to your campus's box.
+ * CMU is urban: this box covers the Oakland campus core where the pins cluster.
  */
-export const CAMPUS_BOUNDS = { minLat: 43.69, maxLat: 43.72, minLng: -72.31, maxLng: -72.27 } as const;
+export const CAMPUS_BOUNDS = { minLat: 40.439, maxLat: 40.448, minLng: -79.951, maxLng: -79.939 } as const;
 
-/** Allowed resource categories. Mirrors the DB category constraint. */
+/**
+ * The campus map model. Two shapes a school can take:
+ *  - Single-anchor (e.g. Dartmouth's Green): one central marker that holds every
+ *    "available anywhere" resource — the "from one bench, all the WiFi" conceit.
+ *    Set `anchor` to that point + its copy.
+ *  - No anchor (e.g. an urban / multi-campus school like CMU): set `anchor: null`.
+ *    Online resources then carry no fake pin; they appear under a labeled list
+ *    instead, and the map frames purely on the real building pins.
+ */
+export const MAP = {
+  /** Map page hero. */
+  title: 'Free stuff, all over campus',
+  deck: 'Gyms, museums, makerspaces, a food pantry, the free city bus — plus every online tool your Andrew ID unlocks. Here is where to find it.',
+  description:
+    'An interactive map of free things around Carnegie Mellon — from the fitness center to the Carnegie Museums to everything online your Andrew ID unlocks.',
+  /** Initial view + framing fallback. Centroid of the pinned campus core. */
+  center: [40.4435, -79.9442] as [number, number],
+  /**
+   * Optional single "available anywhere" anchor marker. null = no anchor pin;
+   * online resources are listed under `anywhereHeading` instead. CMU is urban
+   * with no single green to sit on, so it opts out.
+   */
+  anchor: null as { lat: number; lng: number; label: string; glyph?: string; blurb: string } | null,
+  /** Heading + lead for the no-coordinates ("available anywhere") resource list. */
+  anywhereHeading: 'Available anywhere — online & with your Andrew ID',
+  anywhereBlurb:
+    'Log in from a dorm, a café, or the bus: these are yours from anywhere, no trip across campus required.',
+} as const;
+
+/** Allowed resource categories. Mirrors the DB category constraint (run gen:schema). */
 export const CATEGORIES = [
   'software',
-  'news',
   'library',
-  'outdoor',
-  'money',
-  'health',
   'career',
+  'tepper',
+  'health',
   'campus-life',
-  'alumni-only',
-  'tuck',
+  'outdoor',
   'transportation',
-  'off-campus',
+  'money',
+  'alumni-only',
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 /**
  * Student-facing display labels for category slugs. Decouples the human label
- * from the storage slug so jargon ("tuck", "money") reads clearly without a
+ * from the storage slug so jargon ("tepper", "money") reads clearly without a
  * data migration. Falls back to a de-hyphenated slug for unknown values.
  */
 export const CATEGORY_LABELS: Record<Category, string> = {
   software: 'Software & Apps',
-  news: 'News & Media',
   library: 'Library & Research',
-  outdoor: 'Outdoor & Adventure',
-  money: 'Funding & Discounts',
-  health: 'Health & Wellness',
   career: 'Career',
+  tepper: 'Tepper (Business School)',
+  health: 'Health & Wellness',
   'campus-life': 'Arts & Campus Life',
-  'alumni-only': 'Alumni',
-  tuck: 'Tuck (Business School)',
+  outdoor: 'Outdoor & Adventure',
   transportation: 'Transportation',
-  'off-campus': 'Around Town',
+  money: 'Funding & Discounts',
+  'alumni-only': 'Alumni',
 };
 
 export function categoryLabel(slug: string): string {
@@ -124,55 +152,36 @@ const anyOf =
  */
 export const CURATED_COLLECTIONS: Array<{ key: string; label: string; match: ResourceMatcher }> = [
   {
-    key: 'ai-tools',
-    label: 'AI & Tech Tools',
-    match: anyOf(
-      nameIncludes('Claude for Education', 'GitHub', 'Slack', 'Atlassian'),
-      idIncludes('claude', 'github', 'slack', 'atlassian')
-    ),
+    key: 'software',
+    label: 'Software & Cloud',
+    match: anyOf(inCategory('software'), nameIncludes('LinkedIn Learning', "O'Reilly")),
   },
   {
     key: 'creative',
     label: 'For Creatives',
     match: anyOf(
-      nameIncludes('Adobe', 'Canva', 'Sibelius', 'Woodworking', 'Ceramics', 'Music Practice'),
-      (r) => r.category === 'campus-life' && (r.name.includes('Hop') || r.name.includes('Art'))
+      nameIncludes('Adobe', 'IDeATe', 'Miller', 'Frame', 'School of Music', 'School of Drama', 'Arts Pass')
     ),
   },
   {
     key: 'data',
-    label: 'Data & Analytics',
-    match: nameIncludes(
-      'MATLAB',
-      'Stata',
-      'SPSS',
-      'SAS',
-      'JMP',
-      'Python',
-      'Jupyter',
-      'RStudio',
-      'Bloomberg',
-      'WRDS',
-      'Qualtrics'
-    ),
+    label: 'Data & Finance',
+    match: nameIncludes('MATLAB', 'Mathematica', 'Bloomberg', 'WRDS', 'Capital IQ', 'Data & Code', 'Research Databases'),
   },
   {
     key: 'research',
     label: 'Research & Writing',
-    match: anyOf(
-      nameIncludes('Overleaf', 'JSTOR', "O'Reilly", 'Web of Science', 'Scopus', 'ProQuest', 'PsycINFO'),
-      inCategory('library')
-    ),
+    match: anyOf(inCategory('library'), nameIncludes("O'Reilly", 'Interlibrary')),
   },
   {
-    key: 'outdoor',
-    label: 'Outdoor & Adventure',
-    match: anyOf(inCategory('outdoor'), nameIncludes('Climbing', 'Recreation')),
+    key: 'wellness',
+    label: 'Health & Recreation',
+    match: anyOf(inCategory('health'), nameIncludes('Intramural', 'Explorers')),
   },
   {
     key: 'career',
     label: 'Career & Professional',
-    match: anyOf(inCategory('career'), nameIncludes('LinkedIn Learning', 'DocuSign')),
+    match: anyOf(inCategory('career'), inCategory('tepper'), nameIncludes('LinkedIn Learning')),
   },
 ];
 
@@ -183,78 +192,64 @@ export const CURATED_COLLECTIONS: Array<{ key: string; label: string; match: Res
 export const SCENARIOS: Record<string, { match: ResourceMatcher }> = {
   'grad-school': {
     match: nameIncludes(
-      'JSTOR',
-      'ProQuest',
+      'Research Databases',
       'Interlibrary',
       "O'Reilly",
       'Counseling',
-      'Web of Science',
-      'Scopus',
-      'Rauner',
-      'Overleaf'
+      'TimelyCare',
+      'KiltHub',
+      'Data & Code',
+      'Digital Collections'
     ),
   },
   'job-hunt': {
     match: anyOf(
       inCategory('career'),
-      nameIncludes('Bloomberg', 'News Access', 'Python', 'MATLAB', 'Printing Credit')
+      inCategory('tepper'),
+      nameIncludes('LinkedIn Learning', 'Handshake', 'Printing')
     ),
   },
   'data-analysis': {
     match: nameIncludes(
-      'Bloomberg',
       'MATLAB',
-      'SPSS',
-      'SAS',
-      'JMP',
+      'Mathematica',
+      'Bloomberg',
       'WRDS',
-      'Qualtrics',
-      'Statista',
-      'Python',
-      'Jupyter',
-      'RStudio',
-      'Mathematica'
+      'Capital IQ',
+      'Data & Code',
+      'Research Databases'
     ),
   },
   creative: {
     match: nameIncludes(
       'Adobe',
-      'Canva',
-      'Hopkins',
-      'Hood',
-      'Woodwork',
-      'Ceramic',
-      'Sibelius',
-      'Music'
+      'IDeATe',
+      'Miller',
+      'Frame',
+      'School of Music',
+      'School of Drama',
+      'Arts Pass'
     ),
   },
   adventure: {
     match: anyOf(
-      inCategory('outdoor'),
-      nameIncludes('DOC', 'Ledyard', 'Rental', 'Climb', 'Recreation')
+      nameIncludes('Arts Pass', 'Explorers', 'Pittsburgh Regional', 'NightSafe', 'Intramural', 'Zipcar', 'Miller')
     ),
   },
   'save-money': {
-    match: nameIncludes(
-      'Printing',
-      'Clothing',
-      'News',
-      'Gym',
-      'Alumni Gym',
-      'Athletic',
-      'Hopkins',
-      'Film',
-      'Programming Board'
+    match: anyOf(
+      inCategory('money'),
+      nameIncludes('Pittsburgh Regional', 'Headspace', 'Pantry', 'Printing')
     ),
   },
 };
 
 /** Metadata for the scenarios hub page. */
 export const SCENARIO_CARDS = [
-  { slug: 'grad-school', icon: '📚', title: 'Applying to grad school?', blurb: 'Research databases, writing tools, and support for the most important proposal of your life.' },
-  { slug: 'job-hunt', icon: '💼', title: 'Job hunting?', blurb: 'Bloomberg Terminal, career coaching for life, news subscriptions, and technical skills.' },
-  { slug: 'data-analysis', icon: '📊', title: 'Running data analysis?', blurb: 'MATLAB, SPSS, SAS, JMP Pro, WRDS, Qualtrics, and a $25k Bloomberg Terminal.' },
-  { slug: 'creative', icon: '🎨', title: 'Building a portfolio?', blurb: 'Adobe Creative Cloud, Canva Pro, Hopkins Center studios, and Hood Museum access.' },
-  { slug: 'adventure', icon: '🏔️', title: 'Planning an adventure?', blurb: 'DOC cabins, free outdoor gear rentals, Ledyard Canoe Club, and DOC Trips.' },
-  { slug: 'save-money', icon: '💰', title: 'Tight on cash?', blurb: 'Printing credit, free winter clothing, NYT/WSJ, free film screenings, and gym access.' },
+  { slug: 'grad-school', icon: '📚', title: 'Applying to grad school?', blurb: 'Research databases, writing support, KiltHub, and free counseling for the most important proposal of your life.' },
+  { slug: 'job-hunt', icon: '💼', title: 'Job hunting?', blurb: 'Handshake, lifelong career coaching, LinkedIn Learning, and a $25k Bloomberg Terminal.' },
+  { slug: 'data-analysis', icon: '📊', title: 'Running data analysis?', blurb: 'MATLAB, Mathematica, WRDS, S&P Capital IQ, and Bloomberg Terminals across campus.' },
+  { slug: 'creative', icon: '🎨', title: 'Building a portfolio?', blurb: "Adobe Creative Cloud, IDeATe's laser cutters and 3D printers, and the Miller ICA." },
+  { slug: 'adventure', icon: '🏙️', title: 'New to Pittsburgh?', blurb: 'Free transit anywhere in the city, the Arts Pass to eight museums, and the Explorers Club.' },
+  { slug: 'save-money', icon: '💰', title: 'Tight on cash?', blurb: 'Free bus rides, the CMU Pantry, $40/semester printing, and emergency support grants.' },
 ] as const;

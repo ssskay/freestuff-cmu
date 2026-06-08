@@ -1,10 +1,10 @@
-/* Hallmark · macrostructure: Catalogue · genre: editorial · theme: Studio (Dartmouth green anchor)
+/* Hallmark · macrostructure: Catalogue · genre: editorial · theme: Studio (Carnegie red accent)
  * nav: N7 Inline + Wordmark · footer: Ft2 Terse statement
  * tone: clean editorial · enrichment: none (typography only)
  */
 
 :root {
-  /* Color — OKLCH palette with Dartmouth green accent */
+  /* Color — OKLCH palette with Carnegie Mellon red accent */
   --color-paper: oklch(98% 0 0);
   --color-paper-2: oklch(96% 0 0);
   --color-paper-3: oklch(93% 0 0);
@@ -14,10 +14,11 @@
   /* 50% L clears 4.5:1 on paper for small text (was 62% = 3.44:1, failing AA). */
   --color-ink-subtle: oklch(50% 0 0);
 
-  /* Dartmouth green as primary accent — #00693E converted to OKLCH */
-  --color-accent: oklch(39% 0.11 155);
-  --color-accent-hover: oklch(35% 0.12 155);
-  --color-accent-subtle: oklch(95% 0.02 155);
+  /* Carnegie Red as primary accent — official #C41230 in OKLCH (renders #c41330).
+     6:1 on paper, so it clears AA both as link text and behind white button text. */
+  --color-accent: oklch(52.4% 0.203 21.6);
+  --color-accent-hover: oklch(47% 0.20 21.6);
+  --color-accent-subtle: oklch(95% 0.03 22);
 
   --color-focus: oklch(50% 0.15 265);
   --color-border: oklch(88% 0 0);

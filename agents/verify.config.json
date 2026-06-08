@@ -1,11 +1,13 @@
 {
-  "school": "Dartmouth",
-  "user_agent": "Dartmouth-Verifier/1.0 (freestuff-dartmouth; link verification)",
+  "school": "Carnegie Mellon",
+  "user_agent": "CMU-Verifier/1.0 (freestuff-cmu; link verification)",
   "recovery_domains": [
-    "library.dartmouth.edu",
-    "services.dartmouth.edu",
-    "alumni.dartmouth.edu",
-    "outdoors.dartmouth.edu",
-    "students.dartmouth.edu"
+    "cmu.edu",
+    "library.cmu.edu",
+    "guides.library.cmu.edu",
+    "ideate.cmu.edu",
+    "athletics.cmu.edu",
+    "miller-ica.cmu.edu",
+    "drama.cmu.edu"
   ]
 }
