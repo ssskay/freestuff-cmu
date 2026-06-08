@@ -7,6 +7,15 @@
  * from this module rather than hardcoding values inline.
  */
 
+/**
+ * PACK FILES (the full per-school edit surface — see recipes/recipe-fork.md):
+ *   src/content/resources.json, src/content/building-footprints.json,
+ *   public/tokens.css (--color-accent), public/og.png (generated),
+ *   this file (SITE + taxonomy + collections + scenarios),
+ *   agents/verify.config.json, and the anchor constant in src/pages/map.astro.
+ * Everything else is shared engine — do not edit it in a fork; send changes upstream.
+ */
+
 import type { Resource } from './lib/catalog';
 
 /** School / site branding. The single place a fork edits to rebrand. */
