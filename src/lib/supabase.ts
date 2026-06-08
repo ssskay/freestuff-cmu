@@ -1,5 +1,5 @@
 /**
- * Supabase Client for Free Stuff @ Dartmouth
+ * Supabase client for the free-stuff catalog.
  * Typed helpers for database operations.
  *
  * Public-facing resource identity is the stable slug (see catalog.ts). The
