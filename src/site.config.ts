@@ -176,7 +176,7 @@ export const CURATED_COLLECTIONS: Array<{ key: string; label: string; match: Res
   {
     key: 'wellness',
     label: 'Health & Recreation',
-    match: anyOf(inCategory('health'), nameIncludes('Intramural', 'Explorers')),
+    match: anyOf(inCategory('health'), nameIncludes('Intramural')),
   },
   {
     key: 'career',
@@ -233,7 +233,7 @@ export const SCENARIOS: Record<string, { match: ResourceMatcher }> = {
   },
   adventure: {
     match: anyOf(
-      nameIncludes('Arts Pass', 'Explorers', 'Pittsburgh Regional', 'NightSafe', 'Intramural', 'Zipcar', 'Miller')
+      nameIncludes('Arts Pass', 'Pittsburgh Regional', 'NightSafe', 'Intramural', 'Miller')
     ),
   },
   'save-money': {
@@ -250,6 +250,6 @@ export const SCENARIO_CARDS = [
   { slug: 'job-hunt', icon: '💼', title: 'Job hunting?', blurb: 'Handshake, lifelong career coaching, LinkedIn Learning, and a $25k Bloomberg Terminal.' },
   { slug: 'data-analysis', icon: '📊', title: 'Running data analysis?', blurb: 'MATLAB, Mathematica, WRDS, S&P Capital IQ, and Bloomberg Terminals across campus.' },
   { slug: 'creative', icon: '🎨', title: 'Building a portfolio?', blurb: "Adobe Creative Cloud, IDeATe's laser cutters and 3D printers, and the Miller ICA." },
-  { slug: 'adventure', icon: '🏙️', title: 'New to Pittsburgh?', blurb: 'Free transit anywhere in the city, the Arts Pass to eight museums, and the Explorers Club.' },
+  { slug: 'adventure', icon: '🏙️', title: 'New to Pittsburgh?', blurb: 'Free transit anywhere in the city, the Arts Pass to eight museums, intramural leagues, and safe late-night rides home.' },
   { slug: 'save-money', icon: '💰', title: 'Tight on cash?', blurb: 'Free bus rides, the CMU Pantry, $40/semester printing, and emergency support grants.' },
 ] as const;
