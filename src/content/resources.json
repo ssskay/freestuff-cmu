@@ -849,25 +849,6 @@
     "date_added": "2026-06-08"
   },
   {
-    "id": "cmu-explorers-club",
-    "name": "CMU Explorers Club",
-    "category": "outdoor",
-    "description": "Student-run outdoor club (since 1959) running weekly trips — hiking, climbing, backpacking, paddling — and offering members access to a shared gear room.",
-    "link": "https://www.cmuexplorers.org/join-explorers",
-    "eligibility": [
-      "student",
-      "faculty",
-      "staff"
-    ],
-    "source": "cmuexplorers.org",
-    "last_verified": "2026-06-08",
-    "status": "active",
-    "notes": "Open to anyone affiliated with CMU. $20/year membership includes gear-room access and subsidized group trips.",
-    "added_by": "human",
-    "annual_value": 0,
-    "date_added": "2026-06-08"
-  },
-  {
     "id": "prt-free-transit",
     "name": "Free Pittsburgh Regional Transit (PRT)",
     "category": "transportation",
@@ -903,28 +884,6 @@
     "notes": "Formerly the evening escort shuttle. Valid CMU ID required; track buses via the TripShot app.",
     "added_by": "human",
     "annual_value": 0,
-    "date_added": "2026-06-08"
-  },
-  {
-    "id": "zipcar-cmu-discount",
-    "name": "Zipcar Car Sharing (CMU Rate)",
-    "category": "transportation",
-    "description": "CMU students, faculty, and staff (18+, licensed 2+ years) can join Zipcar for a discounted $35/year membership with no application fee, and reserve cars parked on campus.",
-    "link": "https://www.cmu.edu/transportation/transport/zipcar.html",
-    "eligibility": [
-      "student",
-      "faculty",
-      "staff"
-    ],
-    "source": "cmu.edu",
-    "last_verified": "2026-06-08",
-    "status": "active",
-    "place": "East Campus Garage",
-    "lat": 40.4438,
-    "lng": -79.94003,
-    "notes": "A discount, not free: $35/year membership with the application fee waived. Vehicles in the East Campus Garage.",
-    "added_by": "human",
-    "annual_value": 55,
     "date_added": "2026-06-08"
   },
   {
