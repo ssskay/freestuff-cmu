@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://freestuff-cmu.vercel.app/sitemap-index.xml
