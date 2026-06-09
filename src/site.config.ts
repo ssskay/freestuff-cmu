@@ -25,7 +25,7 @@ export const SITE = {
   school: 'Carnegie Mellon',
   name: 'Free Stuff @ Carnegie Mellon',
   tagline: 'Your complete catalog of free perks',
-  url: 'https://freestuff-cmu.vercel.app',
+  url: 'https://cmu.campusfreebies.com',
   /** Public repo — used for the "fork this" + "report an issue" links. */
   github: 'https://github.com/ssskay/freestuff-cmu',
   /** School email domain, used for form placeholders. Pack value: your school's domain. */
