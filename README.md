@@ -35,3 +35,7 @@ Create a Supabase project + a Vercel project for this repo, set
 `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY`, apply `supabase/schema.sql`,
 then `npm run seed`. The static catalog renders without a backend; Supabase only
 powers upvotes, reports, and submissions.
+
+---
+
+Maintained by [Sara Kay](https://sarakay.me) · [@ssskay](https://github.com/ssskay) · [more projects](https://sarakay.me/projects.html)
