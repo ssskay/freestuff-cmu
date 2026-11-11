@@ -4,6 +4,10 @@ A public, agent-maintained catalog of free perks for Carnegie Mellon students an
 alumni: searchable list, campus map, scenario guides, and a weekly link verifier.
 Astro + Supabase, deploys to Vercel.
 
+**Live site:** [cmu.campusfreebies.com](https://cmu.campusfreebies.com)
+
+![Free Stuff @ Carnegie Mellon home page: search box, category filters and 51 verified resources](docs/images/screenshot.jpg)
+
 Built from [`freestuff-template`](https://github.com/ssskay/freestuff-template) (pack #2).
 Engine updates flow in via `git merge upstream/main` (the template is the `upstream` remote).
 
